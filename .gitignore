@@ -1,0 +1,7 @@
+.vscode/
+v/
+must-gather*
+
+__pycache__*
+*.pyc
+*.egg-info
