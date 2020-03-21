@@ -1,0 +1,5 @@
+#!/bin/bash
+python setup.py clean
+python setup.py develop
+eval "$(_NS_COMPLETE=source_bash ns)"
+function ns() { cd $(~/code/mgshell/v/bin/ns $1); }
