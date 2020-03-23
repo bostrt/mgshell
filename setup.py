@@ -11,7 +11,10 @@ setup(
     author='bostrt',
     entry_points = {
         'console_scripts': [
+            'mg=mgshell.mgshell:cli',
             'ns=mgshell.ns:ns',
+            'pod=mgshell.pod:pod',
+            'log=mgshell.log:log',
             ]
     },
     description='xxx',
@@ -20,5 +23,6 @@ setup(
     install_requires=[
         'prompt-toolkit',
         'click', 
+        'fuzzyfinder'
         ]
 )
