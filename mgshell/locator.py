@@ -83,9 +83,28 @@ def findNamespaces(mgbase):
     except FileNotFoundError:
         return None
 
-def findPods(mgbase, namespace=None):
-    """Return a list of Pod names in current namespace. 
-       If namespace is None, returns list of Pod names for across all namespaces.
+def findAllPods(mgbase):
+    """Return a list of namespace and Pod names in that namespace.
+       Return list form:
+       ["openshift-sdn/sdn-mb3ban", "openshift-sdn/ovs-kg4rs", ...]
+    """
+    try:
+        ret = []
+        listing = os.listdir(os.path.join(mgbase, 'namespaces'))
+        for ns in listing:
+            pods = findPodsInNamespace(mgbase, ns)
+            if pods is not None:
+                # Append to return list, but with ns prepending to each pod
+                ret = ret + [ns + '/' + p for p in pods]
+        return ret
+    except FileNotFoundError:
+        return None
+
+def findPodsInNamespace(mgbase, namespace):
+    """Return a list of Pod names in a namespace. 
+       If namespace is None, returns None. 
+       If namespace is specified but no Pods found, returns empty list.
+       TODO: Should this return empty list even when ns is None?
     """
     if namespace is not None:
         try:
@@ -93,15 +112,7 @@ def findPods(mgbase, namespace=None):
             return listing
         except FileNotFoundError:
             return None
-    try:
-        ret = []
-        listing = os.listdir(os.path.join(mgbase, 'namespaces'))
-        for ns in listing:
-            pods = findPods(mgbase, ns)
-            if pods is not None:
-                ret = ret + pods
-        return ret
-    except FileNotFoundError:
+    else:
         return None
 
 def findContainers(mgbase, namespace, pod):

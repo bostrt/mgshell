@@ -1,6 +1,6 @@
 import click
 
-from mgshell.locator import findMustGather, findPods, getCurrentNamespace
+from mgshell.locator import findMustGather, findPodsInNamespace, getCurrentNamespace, findAllPods
 
 from os import path
 
@@ -8,7 +8,10 @@ def get_pods(ctx, args, incomplete):
     mgbase = findMustGather()
     namespace = getCurrentNamespace()
     if mgbase is not None:
-        pods = findPods(mgbase, namespace)
+        if namespace is None:
+            pods = findAllPods(mgbase)
+        elif namespace is not None:
+            pods = findPodsInNamespace(mgbase, namespace)
         if pods is not None:
             return [p for p in pods if incomplete in p]
     return []
@@ -17,8 +20,15 @@ def get_pods(ctx, args, incomplete):
 @click.argument("pod", type=click.STRING, autocompletion=get_pods)
 def pod(pod):
     mgbase = findMustGather()
-    p = path.join(mgbase, "namespaces", pod)
-    click.echo(p)
-
-# eval "$(_NS_COMPLETE=source_bash ns)"
-# function ns() { cd $(~/code/mgshell/v/bin/ns $1); }
+    namespace = getCurrentNamespace()
+    if namespace is None:
+        try:
+            ns, pname = pod.split('/')
+            p = path.join(mgbase, 'namespaces', '%s/pods/%s' % (ns, pname))
+            click.echo(p)
+        except ValueError:
+            #click.echo('Invalid pod name "%s"' % pod)
+            return
+    else:
+        p = path.join(mgbase, 'namespaces', namespace, 'pods', pod)
+        click.echo(p)
