@@ -1,7 +1,9 @@
 #!/bin/bash
+source ./v/bin/activate
+
 python setup.py clean
 python setup.py develop
-unset -f ns
+unset -f nsls
 unset -f pod
 
 eval "$(_NS_COMPLETE=source_bash ns)"
@@ -11,3 +13,18 @@ eval "$(_MG_COMPLETE=source_bash mg)"
 
 function ns() { cd $(~/code/mgshell/v/bin/ns $1); }
 function pod() { cd $(~/code/mgshell/v/bin/pod $1); }
+
+function _update_ps1() {
+    ret=$(mgprompt)
+    if [ "$ret" ]; then
+      PS1=$ret
+    else
+      PS1=$MG_ORIGINAL_PS1
+    fi
+}
+
+MG_ORIGINAL_PS1=$PS1
+
+if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi

@@ -13,6 +13,7 @@ setup(
         'console_scripts': [
             'mg=mgshell.mgshell:cli',
             'ns=mgshell.ns:ns',
+            'mgprompt=mgshell.mgshell:prompt',
             'pod=mgshell.pod:pod',
             'log=mgshell.log:log',
             ]

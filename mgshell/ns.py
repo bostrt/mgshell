@@ -19,6 +19,3 @@ def ns(namespace):
     mgbase = findMustGather()
     p = path.join(mgbase, "namespaces", namespace)
     click.echo(p)
-
-# eval "$(_NS_COMPLETE=source_bash ns)"
-# function ns() { cd $(~/code/mgshell/v/bin/ns $1); }

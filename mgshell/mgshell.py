@@ -3,7 +3,7 @@ import os
 import click
 
 from mgshell.version import __version__
-from mgshell.locator import findMustGatherRootDir, dropMarker
+from mgshell.locator import findMustGatherRootDir, dropMarker, findMustGatherRootDirFast
 
 @click.group()
 def cli():
@@ -23,3 +23,25 @@ def init(path):
 @cli.command()
 def version():
     click.echo("mgshell %s" % __version__)
+
+PROMPT_PATTERN="[mgshell %s] > "
+
+def prompt():
+    cwd = os.getcwd()
+    mgbase = findMustGatherRootDirFast()
+    if mgbase is None:
+        return
+    subpath = cwd.replace(mgbase, '')
+    subpath = promptFilter(subpath)
+    print(PROMPT_PATTERN % (subpath or '/'))
+
+def promptFilter(subpath):
+    if subpath is None or subpath == '':
+        return ''
+    subpath = subpath.replace('amespace', '')
+    if 'pods' in subpath:
+        subpath = trimContainers(subpath)
+    return subpath
+
+def trimContainers(subpath):
+    return subpath

@@ -9,6 +9,23 @@ SECOND_LEVEL='quay-io-openshift-release'
 MGDIRS={'audit_logs', 'cluster-scoped-resources', 'host_service_logs', 'namespaces', 'version'}
 MARKER='.mgshell'
 
+def findMustGatherRootDirFast():
+    while True:
+        if detectMarkerFast():
+            return os.getcwd()
+        os.chdir('../')
+        if os.getcwd() == '/':
+            return None
+
+def detectMarkerFast():
+    try:
+        result = os.stat(MARKER)
+        #return stat.S_ISREG(result)
+        # TODO: Fix above?
+        return True
+    except:
+        return False
+
 def findMustGatherRootDir(here=os.getcwd(), depth=0):
     """Return root directory of must gather.
        The root of must gather is the directory containing folks such as:
@@ -115,8 +132,11 @@ def findPodsInNamespace(mgbase, namespace):
     else:
         return None
 
-def findContainers(mgbase, namespace, pod):
-    pass
+def findContainersInPod(mgbase, namespace, pod):
+    """Return list of Container names in given Pod and Namespace."""
+    if namespace is not None and pod is not None:
+        containerDir = os.path.join(mgbase, 'namespaces', namespace, 'pods', pod)
+        return [ name for name in os.listdir(containerDir) if os.path.isdir(os.path.join(containerDir, name)) ]
 
 def findContainerLogs(mgbase, namespace, pod, container, previous, insecure):
     pass
@@ -131,5 +151,18 @@ def getCurrentNamespace(here=os.getcwd()):
             return basename
         else:
             return getCurrentNamespace(parentDir)
+    else:
+        return None
+
+def getCurrentPod(here=os.getcwd()):
+    """Return the pod name user is current in. Default input is current working directory."""
+    if 'pods' in here:
+        basename = os.path.basename(here)
+        parentDir = os.path.dirname(here)
+        parentBasename = os.path.basename(parentDir)
+        if parentBasename == 'pods':
+            return basename
+        else:
+            return getCurrentPod(parentDir)
     else:
         return None
