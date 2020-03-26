@@ -16,6 +16,7 @@ setup(
             'mgprompt=mgshell.mgshell:prompt',
             'pod=mgshell.pod:pod',
             'log=mgshell.log:log',
+            'mgtest=mgshell.test:test'
             ]
     },
     description='xxx',

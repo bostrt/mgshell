@@ -38,5 +38,8 @@ def log(container):
         return
     log = 'current.log'
     p = path.join(mgbase, 'namespaces', namespace, 'pods', pod, container, container, 'logs', log)
-    with open(p, 'r') as f:
-        print(f.read())
+    try:
+        with open(p, 'r') as f:
+            print(f.read())
+    except FileNotFoundError:
+        print('Container "%s" not found' % container)
