@@ -3,11 +3,12 @@ from os import path
 import click
 
 from mgshell.locator import findMustGather, findNamespaces
+from mgshell.mg import Locator
 
 def get_namespaces(ctx, args, incomplete):
-    mgbase = findMustGather()
-    if mgbase is not None:
-        namespaces = findNamespaces(mgbase)
+    locator = Locator()
+    if locator.isMGFound():
+        namespaces = locator.getNamespaceList()
         if namespaces is not None:
             suggestions = [ns for ns in namespaces if incomplete in ns]
             return suggestions
@@ -16,6 +17,5 @@ def get_namespaces(ctx, args, incomplete):
 @click.command()
 @click.argument("namespace", type=click.STRING, autocompletion=get_namespaces)
 def ns(namespace):
-    mgbase = findMustGather()
-    p = path.join(mgbase, "namespaces", namespace)
-    click.echo(p)
+    locator = Locator()
+    click.echo(locator.getNamespacePath(namespace))

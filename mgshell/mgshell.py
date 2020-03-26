@@ -28,7 +28,7 @@ PROMPT_PATTERN="[mgshell %s] > "
 
 def prompt():
     cwd = os.getcwd()
-    mgbase = findMustGatherRootDirFast()
+    mgbase = findMustGatheroRootDirFast()
     if mgbase is None:
         return
     subpath = cwd.replace(mgbase, '')

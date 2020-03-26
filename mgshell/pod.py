@@ -1,34 +1,31 @@
 import click
 
 from mgshell.locator import findMustGather, findPodsInNamespace, getCurrentNamespace, findAllPods
+from mgshell.mg import Locator, CurrentContext
 
 from os import path
 
 def get_pods(ctx, args, incomplete):
-    mgbase = findMustGather()
-    namespace = getCurrentNamespace()
-    if mgbase is not None:
+    locator = Locator()
+    mgctx = CurrentContext(locator)
+
+    if locator.isMGFound():
+        namespace = mgctx.getCurrentNamespace()
         if namespace is None:
-            pods = findAllPods(mgbase)
-        elif namespace is not None:
-            pods = findPodsInNamespace(mgbase, namespace)
-        if pods is not None:
+            pods = locator.getPodList()
+        else:
+            pods = locator.getPodListInNamespace(namespace)
+        if pods is None:
+            return []
+        else:
             return [p for p in pods if incomplete in p]
-    return []
 
 @click.command()
 @click.argument("pod", type=click.STRING, autocompletion=get_pods)
 def pod(pod):
-    mgbase = findMustGather()
-    namespace = getCurrentNamespace()
-    if namespace is None:
-        try:
-            ns, pname = pod.split('/')
-            p = path.join(mgbase, 'namespaces', '%s/pods/%s' % (ns, pname))
-            click.echo(p)
-        except ValueError:
-            #click.echo('Invalid pod name "%s"' % pod)
-            return
-    else:
-        p = path.join(mgbase, 'namespaces', namespace, 'pods', pod)
-        click.echo(p)
+
+    locator = Locator()
+    mgctx = CurrentContext(locator)
+    namespace = mgctx.getCurrentNamespace()
+
+    click.echo(locator.getPodPath(pod, namespace))
