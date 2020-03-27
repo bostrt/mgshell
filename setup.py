@@ -13,17 +13,15 @@ setup(
         'console_scripts': [
             'mg=mgshell.mgshell:cli',
             'ns=mgshell.ns:ns',
-            'mgprompt=mgshell.mgshell:prompt',
             'pod=mgshell.pod:pod',
             'log=mgshell.log:log',
-            'mgtest=mgshell.test:test'
+            'root=mgshell.root:root',
             ]
     },
     description='xxx',
     license='',
     url='https://github.com/bostrt/mgshell',
     install_requires=[
-        'prompt-toolkit',
         'click', 
         'fuzzyfinder'
         ]

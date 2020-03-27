@@ -6,7 +6,7 @@
 - logs pod/container
 - logs pod -p (previous logs)
 - TODO: What about previous insecure log? (ingress-operator has example of this)
-
+- Active Controllers? 
 
 ## REDESIGN
 

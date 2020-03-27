@@ -13,6 +13,8 @@ eval "$(_MG_COMPLETE=source_bash mg)"
 
 function ns() { cd $(~/code/mgshell/v/bin/ns $1); }
 function pod() { cd $(~/code/mgshell/v/bin/pod $1); }
+function root() { cd $(~/code/mgshell/v/bin/root $1); }
+function home() { cd $(~/code/mgshell/v/bin/root $1); }
 
 #function _update_ps1() {
 #    ret=$(mgprompt)

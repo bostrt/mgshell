@@ -1,13 +1,12 @@
 import click
 
-from mgshell.locator import findMustGather, findPodsInNamespace, getCurrentNamespace, findAllPods
-from mgshell.mg import Locator, CurrentContext
+from mgshell.gps import Locator, CurrentContext
 
 from os import path
 
 def get_pods(ctx, args, incomplete):
     locator = Locator()
-    mgctx = CurrentContext(locator)
+    mgctx = CurrentContext()
 
     if locator.isMGFound():
         namespace = mgctx.getCurrentNamespace()
@@ -25,7 +24,7 @@ def get_pods(ctx, args, incomplete):
 def pod(pod):
 
     locator = Locator()
-    mgctx = CurrentContext(locator)
+    mgctx = CurrentContext()
     namespace = mgctx.getCurrentNamespace()
 
     click.echo(locator.getPodPath(pod, namespace))

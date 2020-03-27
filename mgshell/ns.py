@@ -2,8 +2,7 @@ from os import path
 
 import click
 
-from mgshell.locator import findMustGather, findNamespaces
-from mgshell.mg import Locator
+from mgshell.gps import Locator
 
 def get_namespaces(ctx, args, incomplete):
     locator = Locator()

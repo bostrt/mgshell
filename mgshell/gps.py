@@ -6,6 +6,7 @@ from mgshell.version import __version__
 MARKER_SEARCH_LIMIT=10
 MARKER='.mgshell'
 
+CONTAINER_CURRENT_LOG='current.log'
 
 class Locator:
     def __init__(self, cwd=os.getcwd()):
@@ -126,13 +127,25 @@ class Locator:
             p = os.path.join(self.mgbase, 'namespaces', namespace, 'pods', pod)
             return p
 
+    def getContainerListInPod(self, namespace, pod):
+        if namespace is not None and pod is not None:
+            containerDir = os.path.join(self.mgbase, 'namespaces', namespace, 'pods', pod)
+            return [name for name in os.listdir(containerDir) if os.path.isdir(os.path.join(containerDir, name))]
+
+    def getContainerLogPath(self, namespace, pod, container, log=CONTAINER_CURRENT_LOG):
+        if namespace is None or pod is None or container is None:
+            return None
+
+        p = os.path.join(self.mgbase, 'namespaces', namespace, 'pods', pod, container, container, 'logs', log)
+        # TODO: Should we stat file and return None if log doesn't exist?
+        return p
 
 class CurrentContext:
-    def __init__(self, locator):
-        self.locator = locator
+    def __init__(self):
+        pass
 
     def getCurrentNamespace(self, here=os.getcwd()):
-        """Return the namespace name for input. Default input is current working directory."""
+        """Return the namespace name for which you are in. Default input is current working directory."""
         if 'namespaces' in here:
             basename = os.path.basename(here)
             parentDir = os.path.dirname(here)
@@ -144,3 +157,15 @@ class CurrentContext:
         else:
             return None
 
+    def getCurrentPod(self, here=os.getcwd()):
+        """Return the pod name for which you are in. Default input is current working directory."""
+        if 'namespaces' in here and 'pods' in here:
+            basename = os.path.basename(here)
+            parentDir = os.path.dirname(here)
+            parentBasename = os.path.basename(parentDir)
+            if parentBasename == 'pods':
+                return basename
+            else:
+                return self.getCurrentPod(parentDir)
+        else:
+            return None

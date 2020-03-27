@@ -1,45 +1,53 @@
 import click
 
-from mgshell.locator import findMustGather, findPodsInNamespace, getCurrentNamespace, findAllPods, getCurrentPod, findContainersInPod
+from mgshell.gps import Locator, CurrentContext
 
 from os import path
 
 def get_pods(ctx, args, incomplete):
-    mgbase = findMustGather()
-    namespace = getCurrentNamespace()
-    if mgbase is not None:
+    locator = Locator()
+    mgctx = CurrentContext()
+
+    if locator.isMGFound():
+        namespace = mgctx.getCurrentNamespace()
         if namespace is None:
-            #pods = findAllPods(mgbase)
+            # TODO: Right now we're gonna require you be in a namespace
             return []
-        elif namespace is not None:
-            pods = findPodsInNamespace(mgbase, namespace)
-        if pods is not None:
-            return [p for p in pods if incomplete in p]
+        pods = locator.getPodListInNamespace(namespace)
+        if pods is None:
+            return []
+        return [p for p in pods if incomplete in p]
+    # We got nothin
     return []
 
 def get_containers(ctx, args, incomplete):
-    mgbase = findMustGather()
-    namespace = getCurrentNamespace()
-    pod = getCurrentPod()
-    if namespace is None and pod is None:
-        return [] # TODO: Handle when no Pod is specified
-    containers = findContainersInPod(mgbase, namespace, pod)
-    if containers is None:
-        return []
-    return [c for c in containers if incomplete in c]
+    locator = Locator()
+    mgctx = CurrentContext()
+
+    if locator.isMGFound():
+        namespace = mgctx.getCurrentNamespace()
+        pod = mgctx.getCurrentPod()
+        if namespace is None or pod is None:
+            return []
+        containers = locator.getContainerListInPod(namespace, pod)
+        if containers is None:
+            return []
+        return [c for c in containers if incomplete in c]
 
 @click.command()
 @click.argument("container", type=click.STRING, autocompletion=get_containers)
 def log(container):
-    mgbase = findMustGather()
-    namespace = getCurrentNamespace()
-    pod = getCurrentPod()
-    if namespace is None and pod is None:
-        return
-    log = 'current.log'
-    p = path.join(mgbase, 'namespaces', namespace, 'pods', pod, container, container, 'logs', log)
+    locator = Locator()
+    mgctx = CurrentContext()
+    namespace = mgctx.getCurrentNamespace()
+    pod = mgctx.getCurrentPod()
+
+    logPath = locator.getContainerLogPath(namespace, pod, container)
+    if logPath is None:
+        click.echo('Container "%s" not found' % container)
     try:
-        with open(p, 'r') as f:
-            print(f.read())
+        stdout = click.get_text_stream('stdout')
+        with open(logPath, 'r') as f:
+            stdout.write(f.read())
     except FileNotFoundError:
-        print('Container "%s" not found' % container)
+        click.echo('Container "%s" not found' % container)
