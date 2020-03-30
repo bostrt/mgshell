@@ -6,9 +6,15 @@ from mgshell.version import __version__
 
 setup(
     name='mgshell',
+    author='Robert Bost',
+    author_email='bostrt at gmail dot com',
+    description='A command line aid for navigating OpenShift 4 must gather reports.',
+    license='MIT',
+    url='https://github.com/bostrt/mgshell',
+    keywords='must-gather openshift tools techsupport',
     version=__version__,
     packages=find_packages(),
-    author='bostrt',
+    python_requires='>=3.7',
     entry_points = {
         'console_scripts': [
             'mg=mgshell.mgshell:cli',
@@ -18,9 +24,6 @@ setup(
             'root=mgshell.root:root',
             ]
     },
-    description='xxx',
-    license='',
-    url='https://github.com/bostrt/mgshell',
     install_requires=[
         'click', 
         'fuzzyfinder'
