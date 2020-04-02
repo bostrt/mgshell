@@ -1,4 +1,3 @@
-#!/bin/bash
 function pod() { 
     PODPATH=$(~/code/mgshell/v/bin/pod $1)
     ret=$?

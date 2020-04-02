@@ -1,4 +1,3 @@
-#!/bin/bash
 function ns() { 
     NSPATH=$(~/code/mgshell/v/bin/ns $1)
     ret=$?
