@@ -21,7 +21,11 @@ unset -f root
 unset -f log
 
 export MGLIBEXEC=$VIRTUAL_ENV/mglibexec
-source wrappers/*
+
+for f in wrappers/*;
+do
+    . $f
+done
 
 #function _update_ps1() {
 #    ret=$(~/code/mgshell/a.out)
