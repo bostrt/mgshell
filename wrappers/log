@@ -1,4 +1,4 @@
 function log() { 
-    $MGLIBEXEC/ns $1
+    $MGLIBEXEC/log $1
 }
 
