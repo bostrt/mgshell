@@ -17,7 +17,7 @@ setup(
     python_requires='>=3.7',
     entry_points = {
         'console_scripts': [
-            'mg=mgshell.mgshell:cli',
+            'mgshell=mgshell.mgshell:cli',
             'ns=mgshell.ns:ns',
             'pod=mgshell.pod:pod',
             'log=mgshell.log:log',
@@ -25,7 +25,6 @@ setup(
             ]
     },
     install_requires=[
-        'click', 
-        'fuzzyfinder'
+        'click',
         ]
 )

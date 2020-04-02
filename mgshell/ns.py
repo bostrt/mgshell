@@ -14,7 +14,19 @@ def get_namespaces(ctx, args, incomplete):
     return []
 
 @click.command()
+@click.pass_context
 @click.argument("namespace", type=click.STRING, autocompletion=get_namespaces)
-def ns(namespace):
+def ns(ctx, namespace):
     locator = Locator()
-    click.echo(locator.getNamespacePath(namespace))
+    if locator.isMGFound():
+        try:
+            click.echo(locator.getNamespacePath(namespace))
+        except:
+            # I don't know what could happen here but be prepared
+            click.echo('Failure locating Namespace "%s"' % namespace, err=True)
+            ctx.exit(1)
+    else:
+        # Namespace couldn't be found. Log an error and set exit code.
+        click.echo('Namespace "%s" not found' % namespace, err=True)
+        ctx.exit(1)
+    

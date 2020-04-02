@@ -5,23 +5,24 @@ python setup.py clean
 python setup.py develop
 unset -f ns
 unset -f pod
+unset -f log
+unset -f root
 
 eval "$(_NS_COMPLETE=source_bash ns)"
 eval "$(_POD_COMPLETE=source_bash pod)"
 eval "$(_LOG_COMPLETE=source_bash log)"
-eval "$(_MG_COMPLETE=source_bash mg)"
+eval "$(_MGSHELL_COMPLETE=source_bash mgshell)"
 
-function ns() { cd $(~/code/mgshell/v/bin/ns $1); }
-function pod() { cd $(~/code/mgshell/v/bin/pod $1); }
-function root() { cd $(~/code/mgshell/v/bin/root $1); }
-function home() { cd $(~/code/mgshell/v/bin/root $1); }
+source wrappers/*
 
 #function _update_ps1() {
-#    ret=$(mgprompt)
+#    ret=$(~/code/mgshell/a.out)
 #    if [ "$ret" ]; then
-#      PS1=$ret
+#      echo CHANGE
+#      #PS1=$ret
 #    else
-#      PS1=$MG_ORIGINAL_PS1
+#      echo REVERT
+##      #PS1=$MG_ORIGINAL_PS1
 #    fi
 #}
 

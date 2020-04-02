@@ -1,0 +1,10 @@
+#!/bin/bash
+function pod() { 
+    PODPATH=$(~/code/mgshell/v/bin/pod $1)
+    ret=$?
+    if  [ $ret -eq 0 ]; then
+        cd $PODPATH
+    else
+        return $ret
+    fi
+}

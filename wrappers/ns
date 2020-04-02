@@ -1,0 +1,10 @@
+#!/bin/bash
+function ns() { 
+    NSPATH=$(~/code/mgshell/v/bin/ns $1)
+    ret=$?
+    if  [ $ret -eq 0 ]; then
+        cd $NSPATH
+    else
+        return $ret
+    fi
+}

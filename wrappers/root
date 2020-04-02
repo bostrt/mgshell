@@ -1,0 +1,13 @@
+#!/bin/bash
+function root() { cd $( $1); }
+
+#!/bin/bash
+function pod() { 
+    ROOTPATH=$(~/code/mgshell/v/bin/root $1)
+    ret=$?
+    if  [ $ret -eq 0 ]; then
+        cd $ROOTPATH
+    else
+        return $ret
+    fi
+}
