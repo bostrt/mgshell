@@ -56,14 +56,17 @@ class Locator:
             return None
 
     def _findMustGatherRootSlow(self):
-        depth = 0
-        dir = self.cwd
-        while depth < MARKER_SEARCH_LIMIT:
-            listing = os.listdir(dir)
-            if 'namespaces' in listing:
-                return dir
-            dir = os.path.dirname(dir)
-            depth = depth + 1
+        try:
+            depth = 0
+            dir = self.cwd
+            while depth < MARKER_SEARCH_LIMIT:
+                listing = os.listdir(dir)
+                if 'namespaces' in listing:
+                    return dir
+                dir = os.path.dirname(dir)
+                depth = depth + 1
+        except:
+            return None
 
     def isMGFound(self):
         return self.mgbase is not None
