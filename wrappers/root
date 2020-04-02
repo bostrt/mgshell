@@ -1,5 +1,5 @@
 function root() { 
-    ROOTPATH=$(~/code/mgshell/v/bin/root $1)
+    ROOTPATH=$($MGLIBEXEC/root $1)
     ret=$?
     if  [ $ret -eq 0 ]; then
         cd $ROOTPATH

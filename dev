@@ -1,18 +1,26 @@
 #!/bin/bash
-source ./v/bin/activate
+if [ -z $VIRTUAL_ENV ]; then
+    echo 'Please activate your Python virtualenv and source this file again.'
+    return 1
+fi
+
+# Ensure script dir
+mkdir -p $VIRTUAL_ENV/mglibexec
 
 python setup.py clean
-python setup.py develop
-unset -f ns
-unset -f pod
-unset -f log
-unset -f root
+python setup.py develop --script-dir $VIRTUAL_ENV/mglibexec
+
 
 eval "$(_NS_COMPLETE=source_bash ns)"
 eval "$(_POD_COMPLETE=source_bash pod)"
 eval "$(_LOG_COMPLETE=source_bash log)"
 eval "$(_MGSHELL_COMPLETE=source_bash mgshell)"
 
+unset -f ns
+unset -f pod
+unset -f root
+
+export MGLIBEXEC=$VIRTUAL_ENV/mglibexec
 source wrappers/*
 
 #function _update_ps1() {

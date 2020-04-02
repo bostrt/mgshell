@@ -1,5 +1,5 @@
 function pod() { 
-    PODPATH=$(~/code/mgshell/v/bin/pod $1)
+    PODPATH=$($MGLIBEXEC/pod $1)
     ret=$?
     if  [ $ret -eq 0 ]; then
         cd $PODPATH
