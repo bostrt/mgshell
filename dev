@@ -10,15 +10,15 @@ mkdir -p $VIRTUAL_ENV/mglibexec
 python setup.py clean
 python setup.py develop --script-dir $VIRTUAL_ENV/mglibexec
 
-
-eval "$(_NS_COMPLETE=source_bash ns)"
-eval "$(_POD_COMPLETE=source_bash pod)"
-eval "$(_LOG_COMPLETE=source_bash log)"
-eval "$(_MGSHELL_COMPLETE=source_bash mgshell)"
+eval "$(_NS_COMPLETE=source_bash $VIRTUAL_ENV/mglibexec/ns)"
+eval "$(_POD_COMPLETE=source_bash $VIRTUAL_ENV/mglibexec/pod)"
+eval "$(_LOG_COMPLETE=source_bash $VIRTUAL_ENV/mglibexec/log)"
+eval "$(_MGSHELL_COMPLETE=source_bash $VIRTUAL_ENV/mglibexec/mgshell)"
 
 unset -f ns
 unset -f pod
 unset -f root
+unset -f log
 
 export MGLIBEXEC=$VIRTUAL_ENV/mglibexec
 source wrappers/*

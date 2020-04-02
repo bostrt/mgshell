@@ -1,0 +1,4 @@
+function log() { 
+    $MGLIBEXEC/ns $1
+}
+
